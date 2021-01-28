@@ -1,0 +1,9 @@
+<%inherit file="base.html"/>
+
+<%block name="menu">
+    <ul class="menu">
+        % for k, v in pages.items():
+        <li><a href="${v}">${k}</a></li>
+        % endfor
+    </ul>
+</%block>
