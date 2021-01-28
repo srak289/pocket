@@ -3,13 +3,12 @@ from flask_mako import render_template
 
 import asyncio
 
-from scanner import Scanner
-
-from app import app, db
-from app.models import Device
+from app import app, db, s
 
 pages = {
-    'Devices':'/',
+    'Home':'/home',
+    'Scan':'/scan',
+    'Devices':'/devices',
 }
 
 html_escape_table = {
@@ -32,13 +31,22 @@ def strip(d):
     return safe
 
 @app.route('/')
+@app.route('/home')
+@app.route('/index')
 def index():
-    devices = Device.query.filter_by().all()
 
-    return render_all('device.html', devices)
+    return render_all('index.html')
 
-@app.route('/update')
-def update():
+@app.route('/scan')
+def scan():
+    res = Network.query.filter_by().all()
+    return render_all('results.html', content=res)
+
+@app.route('/update/<net:string>')
+def update(net):
     # scan ip range and update db
+    results = s.scan_network(net)
+    for r in results:
+        print(r)
     
     return redirect(url_for('index'))

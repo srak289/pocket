@@ -6,8 +6,6 @@ from threading import Thread, activeCount
 
 from time import sleep
 
-#from models import *
-
 class Scanner:
     def __init__(self, network):
         self.Network = network
