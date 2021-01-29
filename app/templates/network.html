@@ -11,7 +11,7 @@
     <br/>
     <div>
         % for h in hosts:
-            <a href="${h.id}">${h.name} - ${h.addr}</a>
+            <a href="/host/${h.id}">${h.addr}</a>
         % endfor
     </div>
     <a href="/update/network/${n.id}">Scan Network</a>
