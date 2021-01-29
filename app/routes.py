@@ -158,7 +158,7 @@ def read_many(cls):
         for c in cs:
             for k, v in c.__dict__.items():
                 print(f'Key {k}, Value {v}')
-        return render_all('many.html', db=db, c=c)
+        return render_all('many.html', db=db, cs=cs)
 
 @app.route('/<string:cls>/<int:id>')
 @exec_cls
