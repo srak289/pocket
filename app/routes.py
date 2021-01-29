@@ -3,8 +3,10 @@ from flask_mako import render_template
 
 import asyncio
 
-from app import app, db, s
+from app import app, db
 from app.models import *
+
+from app.scanner import Scanner
 
 pages = {
     'Home':'/home',
@@ -94,11 +96,13 @@ def result():
     res = Network.query.all()
     return render_all('results.html', content=res)
 
-@app.route('/update/<string:net>')
-def update(net):
+@app.route('/update/network/<int:id>')
+def update_network(id):
     # scan ip range and update db
-    results = s.scan_network(net)
+    n = Network.query.filter_by(id=id).one()
+    s = Scanner(n.addr)
+    results = s.scan_network()
     for r in results:
         print(r)
     
-    return redirect(url_for('index'))
+    return render_all('results.html', content=results)
