@@ -5,13 +5,12 @@ import os
 
 from app.scanner import Scanner
 
-file_path = os.path.abspath(os.getcwd())+"/pocket.db"
+file_path = os.getcwd()+"/pocket.db"
 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
 db = SQLAlchemy(app)
-db.create_all()
 
 s = Scanner('55.35.0.0/16')
 

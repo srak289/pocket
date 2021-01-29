@@ -18,6 +18,5 @@ class Port(db.Model):
     host_id = db.Column(db.String, db.ForeignKey('host.id'))
     port_num = db.Column(db.Integer)
     port_stat = db.Column(db.String(32))
-    
 
 db.create_all()

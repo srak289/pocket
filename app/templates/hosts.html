@@ -1,0 +1,26 @@
+<%inherit file="menu.html"/>
+
+<%block name="head_block">
+    <title>Pocket Scanner</title>
+</%block>
+
+<%block name="body_block">
+    <h1>Host List</h1>
+    <br/>
+    <div>
+        % for n in hosts:
+            <a href="${n.id}">${n.name} - ${n.addr}</a>
+        % endfor
+    </div>
+    <br/>
+    <div>
+        <h3>Add Host</h3>
+        <form name="host">
+            <label for="name">Host Name</label>
+            <input type="text" name="name" id="name"/>
+            <label for="addr">Host Address (x.x.x.x/xx)</label>
+            <input type="text" name="addr" id="addr"/>
+            <input type="submit" value="Submit"/>
+        </form>
+    </div>
+</%block>
