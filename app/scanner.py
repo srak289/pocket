@@ -79,7 +79,10 @@ class ScanHost(Thread):
         self.host = host
         self.ports = ports
         self.threads = []
-        self.Results = []
+        self.Results = {
+            'host':self.host,
+            'ports':[]
+        }
 
     def run(self):
         for p in self.ports:
@@ -91,7 +94,7 @@ class ScanHost(Thread):
             t.join()
 
         for t in self.threads:
-            self.Results.append(t.Results)
+            self.Results['ports'].append(t.Results)
 
 class Scan(Thread):
     def __init__(self, host, port):
@@ -99,7 +102,6 @@ class Scan(Thread):
         self.host = host
         self.port = port
         self.Results = {
-            'host':self.host,
             'port':self.port,
             'status':''
         }

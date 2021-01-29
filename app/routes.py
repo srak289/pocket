@@ -103,6 +103,15 @@ def update_network(id):
     s = Scanner(n.addr)
     results = s.scan_network()
     for r in results:
-        print(r)
+        h = Host()
+        h.ports = r['ports']
+        h.network_id = n.id
+        h.addr = r['host']
+        print(h)
+        print(r['host'], r['ports'])
+        db.session.add(h)
+        # we left off here
+    db.session.commit()
+        
     
     return render_all('results.html', content=results)
