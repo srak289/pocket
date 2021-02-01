@@ -11,6 +11,7 @@ class Host(db.Model):
     ports = db.relationship('Port', backref='host')
     network_id = db.Column(db.String(32), db.ForeignKey('network.id'))
     addr = db.Column(db.String(16))
+    name = db.Column(db.String(32))
 
 class Port(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -18,4 +19,5 @@ class Port(db.Model):
     port_num = db.Column(db.Integer)
     port_stat = db.Column(db.String(32))
 
+# db.drop_all()
 db.create_all()

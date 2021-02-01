@@ -6,6 +6,7 @@ import os
 from app.scanner import Scanner
 
 file_path = os.getcwd()+"/pocket.db"
+path = os.path.dirname(os.path.abspath(__file__))
 
 app = Flask(__name__)
 

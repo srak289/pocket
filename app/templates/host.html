@@ -7,18 +7,24 @@
 <%block name="body_block">
     <h1>Host Detail</h1>
     <br/>
-    <h3>${h.name} - ${h.addr}</h3>
+    <h3>${host.name} - ${host.addr}</h3>
     <br/>
     <div>
-        ${h.name}
-        ${h.addr}
-        ${h.id}
-        ${h.network_id}
-        ${h.ports}
+        ${host.addr}
+        ${host.id}
+        ${host.network_id}
+        <table>
+            <tr>
+                <th>Port Number</th>
+                <th>Port Status</th>
+            </tr>
         % for port in ports:
-            ${port.id}
-        <!-- link for ports -->
+            <tr>
+                <td>${port.port_num}</td>
+                <td>${port.port_stat}</td>
+            </tr>
         % endfor
+        </table>
     </div>
-    <a href="/delete/host/${h.id}">Delete Host</a>
+    <a href="/delete/host/${host.id}">Delete Host</a>
 </%block>
