@@ -8,9 +8,20 @@
     <h1>Network List</h1>
     <br/>
     <div>
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Address</th>
+                <th>Live Hosts</th>
+            </tr>
         % for n in networks:
-            <a href="/network/${n.id}">${n.name} - ${n.addr}</a>
+            <tr>
+                <td><a href="/network/${n.id}">${n.name}</a></td>
+                <td>${n.addr}</td>
+                <td></td>
+            </tr>
         % endfor
+        </table>
     </div>
     <br/>
     <div>

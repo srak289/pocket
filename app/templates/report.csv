@@ -1,0 +1,4 @@
+HOST,PORTS,,
+% for h in hosts:
+${h}${ '' if loop.last else ',' }\
+% endfor

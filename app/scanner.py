@@ -29,6 +29,7 @@ class Scanner:
     
     @Ports.setter
     def Ports(self, o):
+            # these should be try/except
         assert(type(o) is list), f'{o} should be list'
         assert(type(i) is int for i in o), f'{i} in {o} is not int'
         self._ports = o
@@ -36,6 +37,16 @@ class Scanner:
     @property
     def Threads(self):
         return len(self._threads)
+
+    def check_network(self, o):
+        try:
+            m = IPv4Network(o)
+            for i in self.Network.subnets(abs(self.Network.prefixlen-m.prefixlen)):
+                if i == m:
+                    return True
+        except Exception:
+                # we don't care what was entered if it wasn't a network
+            return False
 
     def scan_network(self):
         results = []
