@@ -1,23 +1,15 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_mako import MakoTemplates
 import os
 
-from app.scanner import Scanner
+from .utils.driver import SQLDriver
 
-file_path = os.getcwd()+"/pocket.db"
-path = os.path.dirname(os.path.abspath(__file__))
+sqldriver = SQLDriver()
+sqldriver.create_all_tables()
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///'+file_path
-db = SQLAlchemy(app)
+from .scanner import Scanner
 
-s = Scanner('55.35.0.0/16')
+s = Scanner('172.31.0.0/16')
 
-app.secret_key = b"\x0bA\xb5\x8b@g\x92'\x8b\xd6\x1b\xa3(!\xdd\xc0\r\xb7\x80kgUt`"
-
-app.template_folder = 'templates'
-mako = MakoTemplates(app)
-
-from app import routes
+from . import routes

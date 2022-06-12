@@ -1,14 +1,11 @@
 from flask import request, redirect, url_for, session, send_file
-from flask_mako import render_template
-import pdb
 import os
 
-import asyncio
+from . import app, sqldriver
+from .models import *
 
-from app import app, db, s, path
-from app.models import *
-
-from app.scanner import Scanner
+from .scanner import Scanner
+from .utils import render_template
 
 pages = {
     'Home':'/home',
@@ -48,41 +45,46 @@ def networks():
     if request.method == 'POST':
         safe = strip(request.form)
         if s.check_network(safe['addr']):
-            n = Network(name=safe['name'], addr=safe['addr'])
-            db.session.add(n)
-            db.session.commit()
+            sqldriver.create(
+                Network,
+                name=safe['name'],
+                addr=safe['addr']
+            )
             return redirect(url_for('networks'))
         else:
                 # this should do an error thing
                 # check morningbrew login for code
             return redirect(url_for('networks'))
     else:
-        networks = Network.query.all()
+        networks = sqldriver.read(Network)
         print(f'Found {networks}')
         return render_all('networks.html', networks=networks)
 
 @app.route('/network/<int:id>')
 def network(id):
-    n = Network.query.filter_by(id=id).one()
+    n = sqldriver.read(Network, id=id)[0]
     print(f'Page for network {n}')
-    hosts = Host.query.filter_by(network_id=n.id).all()
+    hosts = sqldriver.read(Host, network_id=n.id)
     return render_all('network.html', Port=Port, n=n, hosts=hosts)
 
 @app.route('/delete/network/<int:id>')
 def del_network(id):
-    n = Network.query.filter_by(id=id).one()
-    db.session.delete(n)
-    db.session.commit()
+    n = sqldriver.delete(Network, id=id)[0]
     return redirect(url_for('index'))
 
-@app.route('/result')
-def result():
-    res = Network.query.all()
+@app.route('/results')
+def results():
+    res = sqldriver.read(Network)
     return render_all('results.html', content=res)
+
+@app.route('/devices')
+def devices():
+    res = sqldriver.read(Hosts)
+    return render_all('devices.html', content=res)
 
 @app.route('/report/<int:id>')
 def report(id):
-    hosts = Host.query.filter_by(network_id=id).all()
+    hosts = sqldriver.read(Host, network_id=id)
     for i in hosts:
         print(i)    
     tmp = os.path.join(path, 'templates/tmp.csv')
@@ -94,38 +96,44 @@ def report(id):
 @app.route('/update/network/<int:id>')
 def update_network(id):
     # scan ip range and update db
-    n = Network.query.filter_by(id=id).one()
+    n = sqldriver.read(Network, id=id)[0]
     s = Scanner(n.addr)
     results = s.scan_network()
     for r in results:
-        h = Host(addr=r['host'], network_id=n.id)
-        db.session.add(h)
-        db.session.commit()
+        h = sqldriver.create(
+            Host,
+            addr=r['host'],
+            network_id=n.id
+        )
         for p in r['ports']:
-            x = Port(host_id=h.id, port_num=p['port'], port_stat=p['status'])
-            db.session.add(x)
-        db.session.commit()
+            x = sqldriver.create(
+                Port,
+                host_id=h.id,
+                port_num=p['port'],
+                port_stat=p['status']
+            )
     return redirect(f'/network/{id}')
 
 @app.route('/hosts', methods=['GET', 'POST'])
 def hosts():
     if request.method == 'POST':
         safe = strip(request.method)
-        db.session.add(Host(name=safe['name'], addr=safe['addr']))
+        sqldriver.create(Host,
+            name=safe['name'],
+            addr=safe['addr']
+        )
     else:
-        hosts = Host.query.all()
+        hosts = sqldriver.read(Host)
         return render_all('hosts.html', hosts=hosts)
 
 @app.route('/host/<int:id>')
 def host(id):
-    h = Host.query.filter_by(id=id).one()
-    ports = Port.query.filter_by(host_id=h.id).all()
+    h = sqldriver.read(Host, id=id)[0]
+    ports = sqldriver.read(Port, host_id=h.id)
     return render_all('host.html', host=h, ports=ports)
 
 @app.route('/delete/host/<int:id>')
 def del_host(id):
-    h = Host.query.filter_by(id=id).one()
-    db.session.remove(h)
-    db.session.commit()
+    h = sqldriver.delete(Host, id=id)
     return redirect(url_for('index'))
 
