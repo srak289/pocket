@@ -1,3 +1,4 @@
+
 <%inherit file="menu.html"/>
 
 <%block name="head_block">
@@ -5,8 +6,9 @@
 </%block>
 
 <%block name="body_block">
-    <h1>Network Detail</h1>
+    <h1>Host Detail</h1>
     <br/>
+    % if n:
     <h3>${n.name} - ${n.addr}</h3>
     <br/>
     <div>
@@ -35,4 +37,5 @@
     <a href="/update/network/${n.id}">Scan Network</a><br>
     <a href="/report/${n.id}">Report Network</a><br>
     <a href="/delete/network/${n.id}">Delete Network</a>
+    % endif
 </%block>

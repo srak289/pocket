@@ -53,7 +53,6 @@ def networks():
             return redirect(url_for('networks'))
         else:
                 # this should do an error thing
-                # check morningbrew login for code
             return redirect(url_for('networks'))
     else:
         networks = sqldriver.read(Network)
@@ -79,7 +78,7 @@ def results():
 
 @app.route('/devices')
 def devices():
-    res = sqldriver.read(Hosts)
+    res = sqldriver.read(Host)
     return render_all('devices.html', content=res)
 
 @app.route('/report/<int:id>')
